@@ -30,10 +30,10 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 	bitcoin = get_bitcoin(1);
 
 	if (!ambient) {
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%02d<br/>%02d:%02d:%02d</align>", bitcoin,
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%s<br/>%02d:%02d:%02d</align>", bitcoin,
 			hour24, minute, second);
 	} else {
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%02d<br/>%02d:%02d</align>", bitcoin,
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%s<br/>%02d:%02d</align>", bitcoin,
 			hour24, minute);
 	}
 
@@ -164,11 +164,12 @@ gchar get_bitcoin(int duh) {
 		JsonObject *items_obj = json_object_get_object_member(json_node_get_object(root), "bpi");
 		JsonObject *usd_obj = json_object_get_object_member(items_obj,"USD");
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Size: %d", json_object_get_size(items_obj));
-		int *bitcoin_rate = json_object_get_string_member(usd_obj, "rate");
+		gchar *bitcoin_rate = json_object_get_string_member(usd_obj, "rate");
 //		gint dhcp = g_str_equal(network_method, "dhcp");
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %d", items_obj);
-		g_object_unref(jsonParser);
-
+		dlog_print(DLOG_DEBUG, LOG_TAG, "items: %s", items_obj);
+		dlog_print(DLOG_DEBUG, LOG_TAG, "usd: %s", usd_obj);
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %s", bitcoin_rate);
+//		g_object_unref(jsonParser);
 		return bitcoin_rate;
 	} else {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "curl fail");
