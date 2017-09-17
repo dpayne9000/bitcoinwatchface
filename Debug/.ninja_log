@@ -33,3 +33,17 @@
 16	21	0	clean	d59b6dac04fa9b5d
 1	272	0	src/bitcoinwatch.o	7fadb3f5eb3d16bc
 272	382	0	bitcoinwatch	dc20b0fe28aa4f43
+0	7	0	clean_cov	b3de405e02eb7ca8
+7	13	0	clean_sa	46ab9549445ac981
+13	19	0	clean	d59b6dac04fa9b5d
+1	262	0	src/bitcoinwatch.o	7fadb3f5eb3d16bc
+262	380	0	bitcoinwatch	dc20b0fe28aa4f43
+2	269	0	src/bitcoinwatch.o	e7e40c98b7a6383a
+270	382	0	bitcoinwatch	80d7ec03ab76e49c
+0	8	0	clean_cov	b3de405e02eb7ca8
+8	16	0	clean_sa	46ab9549445ac981
+16	21	0	clean	d59b6dac04fa9b5d
+1	281	0	src/bitcoinwatch.o	e7e40c98b7a6383a
+281	394	0	bitcoinwatch	80d7ec03ab76e49c
+2	293	0	src/bitcoinwatch.o	7fadb3f5eb3d16bc
+293	411	0	bitcoinwatch	dc20b0fe28aa4f43

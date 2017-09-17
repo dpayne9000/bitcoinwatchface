@@ -9,6 +9,7 @@ typedef struct appdata {
 	Evas_Object *win;
 	Evas_Object *conform;
 	Evas_Object *label;
+	Evas_Object *label2;
 } appdata_s;
 
 #define TEXT_BUF_SIZE 256
@@ -27,19 +28,33 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 	watch_time_get_hour24(watch_time, &hour24);
 	watch_time_get_minute(watch_time, &minute);
 	watch_time_get_second(watch_time, &second);
-	bitcoin = get_bitcoin(1);
+
 	dlog_print(DLOG_DEBUG, LOG_TAG, "%g",bitcoin);
 
 	if (!ambient) {
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%g<br/>%02d:%02d:%02d</align>", bitcoin,
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%02d:%02d:%02d</align>",
 			hour24, minute, second);
 	} else {
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%g<br/>%02d:%02d</align>", bitcoin,
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%02d:%02d</align>",
 			hour24, minute);
 	}
 
 	elm_object_text_set(ad->label, watch_text);
 }
+
+static void
+update_bitcoin(appdata_s *ad, watch_time_h watch_time, int ambient)
+{
+	char bitcoin_text[TEXT_BUF_SIZE];
+	gdouble bitcoin;
+
+	bitcoin = get_bitcoin(1);
+	snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>%g</align>",
+				bitcoin);
+	elm_object_text_set(ad->label2, bitcoin_text);
+
+}
+
 
 static void
 create_base_gui(appdata_s *ad, int width, int height)
@@ -68,11 +83,18 @@ create_base_gui(appdata_s *ad, int width, int height)
 	evas_object_move(ad->label, 0, height / 3);
 	evas_object_show(ad->label);
 
+	/* Label*/
+	ad->label2 = elm_label_add(ad->conform);
+	evas_object_resize(ad->label2, width, height / 2);
+	evas_object_move(ad->label2, 0, height / 2);
+	evas_object_show(ad->label2);
+
 	ret = watch_time_get_current_time(&watch_time);
 	if (ret != APP_ERROR_NONE)
 		dlog_print(DLOG_ERROR, LOG_TAG, "failed to get current time. err = %d", ret);
 
 	update_watch(ad, watch_time, 0);
+	update_bitcoin(ad,watch_time,0);
 	watch_time_delete(watch_time);
 
 	/* Show window after base gui is set up */
