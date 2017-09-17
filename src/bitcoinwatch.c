@@ -170,6 +170,36 @@ gdouble get_bitcoin(int duh) {
 			return 130;
 		}
 
+		connection_wifi_state_e wifi_state;
+		connection_get_wifi_state(connection, &wifi_state);
+
+		char *proxy_address;
+		conn_err = connection_get_proxy(connection, CONNECTION_ADDRESS_FAMILY_IPV4, &proxy_address);
+
+		if (wifi_state == CONNECTION_WIFI_STATE_DISCONNECTED ){
+
+			//		char *proxy_address;
+			//		conn_err = connection_get_proxy(connection, CONNECTION_ADDRESS_FAMILY_IPV4, &proxy_address);
+
+			if (conn_err == CONNECTION_ERROR_NONE && proxy_address) {
+				dlog_print(DLOG_DEBUG, LOG_TAG, "wifi disconnected");
+//				curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
+				dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
+			}
+			if (conn_err != CONNECTION_ERROR_NONE) {
+				dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", conn_err);
+			}
+
+
+
+		}
+
+						curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
+						dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
+
+
+
+
 		curl_easy_setopt(curl, CURLOPT_URL, "http://api.coindesk.com/v1/bpi/currentprice.json");
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
