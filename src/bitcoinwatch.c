@@ -123,6 +123,15 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
   return size*nmemb;
 }
 
+
+//static void
+//__proxy_address_changed_cb(const char *ipv4_address,
+//                           const char *ipv6_address, void *user_data)
+//{
+//	CURL *curl;
+//    curl_easy_setopt(curl, CURLOPT_PROXY, ipv4_address);
+//}
+
 gdouble get_bitcoin(int duh) {
 	JsonParser *jsonParser  =  NULL;
 	GError *error  =  NULL;
@@ -138,18 +147,71 @@ gdouble get_bitcoin(int duh) {
 	if (curl){
 		connection_h connection;
 		int conn_err;
+		int error_code;
+		connection_type_e net_state;
 		conn_err = connection_create(&connection);
+		error_code = connection_get_type(connection, &net_state);
+
 		if (conn_err != CONNECTION_ERROR_NONE) {
 			/* Error handling */
-
+			dlog_print(DLOG_DEBUG, LOG_TAG, "connection failed");
 			return 130;
 		}
+		if (error_code == CONNECTION_ERROR_NONE) {
+			dlog_print(DLOG_DEBUG, LOG_TAG, "Network connection type: %d", net_state);
+		}
+
+		char *proxy_address;
+		conn_err = connection_get_proxy(connection, CONNECTION_ADDRESS_FAMILY_IPV4, &proxy_address);
+
+		if (conn_err == CONNECTION_ERROR_NONE && proxy_address) {
+
+		    curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
+		    dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
+		}
+
+		connection_cellular_state_e cellular_state;
+		connection_get_cellular_state(connection, &cellular_state);
+		switch (cellular_state) {
+		case CONNECTION_CELLULAR_STATE_OUT_OF_SERVICE:
+		    dlog_print(DLOG_INFO, LOG_TAG, "Out of service");
+		    break;
+		case CONNECTION_CELLULAR_STATE_FLIGHT_MODE:
+		    dlog_print(DLOG_INFO, LOG_TAG, "Flight mode");
+		    break;
+		case CONNECTION_CELLULAR_STATE_ROAMING_OFF:
+		    dlog_print(DLOG_INFO, LOG_TAG, "Roaming is turned off");
+		    break;
+		case CONNECTION_CELLULAR_STATE_CALL_ONLY_AVAILABLE:
+		    dlog_print(DLOG_INFO, LOG_TAG, "Call only");
+		    break;
+		case CONNECTION_CELLULAR_STATE_AVAILABLE:
+		    dlog_print(DLOG_INFO, LOG_TAG, "Available");
+		    break;
+		case CONNECTION_CELLULAR_STATE_CONNECTED:
+		    dlog_print(DLOG_INFO, LOG_TAG, "Connected");
+		    break;
+		default:
+		    dlog_print(DLOG_INFO, LOG_TAG, "error");
+		    break;
+		}
+
+//		conn_err = connection_set_proxy_address_changed_cb(connection,
+//		                                                   __proxy_address_changed_cb, NULL);
+//		if (conn_err != CONNECTION_ERROR_NONE) {
+//		    /* Error handling */
+//			dlog_print(DLOG_DEBUG, LOG_TAG, "proxy cb error");
+//		    return 0;
+//		}
+
 
 		curl_easy_setopt(curl, CURLOPT_URL, "http://api.coindesk.com/v1/bpi/currentprice.json");
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
+		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L); // debugging
 		res = curl_easy_perform(curl);
 		if (res != CURLE_OK) {
+			dlog_print(DLOG_DEBUG, LOG_TAG, "error 131");
 			return 131;
 		}
 
