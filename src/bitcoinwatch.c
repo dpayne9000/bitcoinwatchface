@@ -125,12 +125,12 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
 
 
 //static void
-//__proxy_address_changed_cb(const char *ipv4_address,
-//                           const char *ipv6_address, void *user_data)
-//{
-//	CURL *curl;
-//    curl_easy_setopt(curl, CURLOPT_PROXY, ipv4_address);
-//}
+static void
+__proxy_changed_cb(const char* ipv4_address, const char* ipv6_address, void* user_data)
+{
+    dlog_print(DLOG_INFO, LOG_TAG, "%s callback, IPv4 address: %s, IPv6 address: %s",
+               (char *)user_data, ipv4_address, (ipv6_address ? ipv6_address : "NULL"));
+}
 
 gdouble get_bitcoin(int duh) {
 	JsonParser *jsonParser  =  NULL;
@@ -166,43 +166,33 @@ gdouble get_bitcoin(int duh) {
 
 		if (conn_err == CONNECTION_ERROR_NONE && proxy_address) {
 
-		    curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
+		    //curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
 		    dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
 		}
+		if (conn_err != CONNECTION_ERROR_NONE) {
+			dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", conn_err);
+		}
 
-		connection_cellular_state_e cellular_state;
-		connection_get_cellular_state(connection, &cellular_state);
-		switch (cellular_state) {
-		case CONNECTION_CELLULAR_STATE_OUT_OF_SERVICE:
-		    dlog_print(DLOG_INFO, LOG_TAG, "Out of service");
+		connection_bt_state_e bt_state;
+		connection_get_bt_state(connection, &bt_state);
+		switch (bt_state) {
+		case CONNECTION_BT_STATE_CONNECTED :
+		    dlog_print(DLOG_INFO, LOG_TAG, "bt connected");
 		    break;
-		case CONNECTION_CELLULAR_STATE_FLIGHT_MODE:
-		    dlog_print(DLOG_INFO, LOG_TAG, "Flight mode");
+		case CONNECTION_BT_STATE_DISCONNECTED:
+		    dlog_print(DLOG_INFO, LOG_TAG, "bt disconnected");
 		    break;
-		case CONNECTION_CELLULAR_STATE_ROAMING_OFF:
-		    dlog_print(DLOG_INFO, LOG_TAG, "Roaming is turned off");
-		    break;
-		case CONNECTION_CELLULAR_STATE_CALL_ONLY_AVAILABLE:
-		    dlog_print(DLOG_INFO, LOG_TAG, "Call only");
-		    break;
-		case CONNECTION_CELLULAR_STATE_AVAILABLE:
-		    dlog_print(DLOG_INFO, LOG_TAG, "Available");
-		    break;
-		case CONNECTION_CELLULAR_STATE_CONNECTED:
-		    dlog_print(DLOG_INFO, LOG_TAG, "Connected");
-		    break;
-		default:
 		    dlog_print(DLOG_INFO, LOG_TAG, "error");
 		    break;
 		}
 
-//		conn_err = connection_set_proxy_address_changed_cb(connection,
-//		                                                   __proxy_address_changed_cb, NULL);
-//		if (conn_err != CONNECTION_ERROR_NONE) {
-//		    /* Error handling */
-//			dlog_print(DLOG_DEBUG, LOG_TAG, "proxy cb error");
-//		    return 0;
-//		}
+		conn_err = connection_set_proxy_address_changed_cb(connection,
+		                                                   __proxy_changed_cb, NULL);
+		if (conn_err != CONNECTION_ERROR_NONE) {
+		    /* Error handling */
+			dlog_print(DLOG_DEBUG, LOG_TAG, "proxy cb error");
+		    return 0;
+		}
 
 
 		curl_easy_setopt(curl, CURLOPT_URL, "http://api.coindesk.com/v1/bpi/currentprice.json");
