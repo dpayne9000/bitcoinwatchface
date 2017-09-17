@@ -5,12 +5,7 @@
 #include <Ecore.h>
 #include <json-glib.h>
 #include <pthread.h>
-typedef struct appdata {
-	Evas_Object *win;
-	Evas_Object *conform;
-	Evas_Object *label;
-	Evas_Object *label2;
-} appdata_s;
+
 
 #define TEXT_BUF_SIZE 256
 
@@ -42,19 +37,26 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 	elm_object_text_set(ad->label, watch_text);
 }
 
-static void
-update_bitcoin(appdata_s *ad, watch_time_h watch_time, int ambient)
+
+void static
+update_bitcoin(appdata_s *ad, int ambient)
 {
+
 	char bitcoin_text[TEXT_BUF_SIZE];
 	gdouble bitcoin;
 
 	bitcoin = get_bitcoin(1);
 	snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>%g</align>",
 				bitcoin);
+	dlog_print(DLOG_ERROR, LOG_TAG, "updated bitcoin");
 	elm_object_text_set(ad->label2, bitcoin_text);
 
 }
-
+Eina_Bool
+bitcoin_cb(appdata_s *ad) {
+	update_bitcoin(ad,0);
+	return EINA_TRUE;
+}
 
 static void
 create_base_gui(appdata_s *ad, int width, int height)
@@ -94,7 +96,8 @@ create_base_gui(appdata_s *ad, int width, int height)
 		dlog_print(DLOG_ERROR, LOG_TAG, "failed to get current time. err = %d", ret);
 
 	update_watch(ad, watch_time, 0);
-	update_bitcoin(ad,watch_time,0);
+	update_bitcoin(ad,0);
+	ecore_timer_add(3, bitcoin_cb(ad), NULL);
 	watch_time_delete(watch_time);
 
 	/* Show window after base gui is set up */
@@ -278,6 +281,8 @@ main(int argc, char *argv[])
 	event_callback.time_tick = app_time_tick;
 	event_callback.ambient_tick = app_ambient_tick;
 	event_callback.ambient_changed = app_ambient_changed;
+
+
 
 	watch_app_add_event_handler(&handlers[APP_EVENT_LANGUAGE_CHANGED],
 		APP_EVENT_LANGUAGE_CHANGED, watch_app_lang_changed, &ad);
