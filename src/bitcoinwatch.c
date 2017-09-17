@@ -43,7 +43,8 @@ update_bitcoin(appdata_s *ad, int ambient)
 	char bitcoin_text[TEXT_BUF_SIZE];
 	gdouble bitcoin;
 
-	bitcoin = get_bitcoin(1);
+	bitcoin = get_bitcoin(1); //needs callback to update this, so it's async
+	//get_bitcoin(ad,1);
 	snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>%g</align>",
 				bitcoin);
 	dlog_print(DLOG_ERROR, LOG_TAG, "updated bitcoin");
@@ -146,6 +147,13 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
   return size*nmemb;
 }
 
+static void
+__proxy_changed_cb(const char* ipv4_address, const char* ipv6_address, void* user_data)
+{
+    dlog_print(DLOG_INFO, LOG_TAG, "%s callback, IPv4 address: %s, IPv6 address: %s",
+               (char *)user_data, ipv4_address, (ipv6_address ? ipv6_address : "NULL"));
+}
+
 gdouble get_bitcoin(int duh) {
 	JsonParser *jsonParser  =  NULL;
 	GError *error  =  NULL;
@@ -164,7 +172,7 @@ gdouble get_bitcoin(int duh) {
 		conn_err = connection_create(&connection);
 		if (conn_err != CONNECTION_ERROR_NONE) {
 			/* Error handling */
-
+			dlog_print(DLOG_DEBUG, LOG_TAG, "conenction error");
 			return 130;
 		}
 
@@ -173,6 +181,14 @@ gdouble get_bitcoin(int duh) {
 
 		char *proxy_address;
 		conn_err = connection_get_proxy(connection, CONNECTION_ADDRESS_FAMILY_IPV4, &proxy_address);
+
+		conn_err = connection_set_proxy_address_changed_cb(connection,
+		                                                   __proxy_changed_cb, NULL);
+		if (conn_err != CONNECTION_ERROR_NONE) {
+		    /* Error handling */
+			dlog_print(DLOG_DEBUG, LOG_TAG, "proxy cb error");
+		    return 0;
+		}
 
 		if (wifi_state == CONNECTION_WIFI_STATE_DISCONNECTED ){
 
@@ -207,6 +223,7 @@ gdouble get_bitcoin(int duh) {
 		}
 
 		curl_easy_cleanup(curl);
+		connection_destroy(connection);
 
 		json_parser_load_from_data(jsonParser, s.ptr, strlen(s.ptr),NULL);
 		dlog_print(DLOG_DEBUG, LOG_TAG, "response %s", s.ptr);
@@ -223,6 +240,7 @@ gdouble get_bitcoin(int duh) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %g", bitcoin_rate);
 
 		return bitcoin_rate;
+
 	} else {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "curl fail");
 		return 420;
