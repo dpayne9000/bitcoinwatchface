@@ -19,7 +19,7 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 {
 	char watch_text[TEXT_BUF_SIZE];
 	int hour24, minute, second;
-	gchar bitcoin;
+	gdouble bitcoin;
 
 	if (watch_time == NULL)
 		return;
@@ -28,12 +28,13 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 	watch_time_get_minute(watch_time, &minute);
 	watch_time_get_second(watch_time, &second);
 	bitcoin = get_bitcoin(1);
+	dlog_print(DLOG_DEBUG, LOG_TAG, "%g",bitcoin);
 
 	if (!ambient) {
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%s<br/>%02d:%02d:%02d</align>", bitcoin,
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%g<br/>%02d:%02d:%02d</align>", bitcoin,
 			hour24, minute, second);
 	} else {
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%s<br/>%02d:%02d</align>", bitcoin,
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%g<br/>%02d:%02d</align>", bitcoin,
 			hour24, minute);
 	}
 
@@ -122,11 +123,12 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
   return size*nmemb;
 }
 
-gchar get_bitcoin(int duh) {
+gdouble get_bitcoin(int duh) {
 	JsonParser *jsonParser  =  NULL;
 	GError *error  =  NULL;
 	jsonParser = json_parser_new ();
     struct string s;
+
     init_string(&s);
 
 	CURL *curl;
@@ -164,12 +166,9 @@ gchar get_bitcoin(int duh) {
 		JsonObject *items_obj = json_object_get_object_member(json_node_get_object(root), "bpi");
 		JsonObject *usd_obj = json_object_get_object_member(items_obj,"USD");
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Size: %d", json_object_get_size(items_obj));
-		gchar *bitcoin_rate = json_object_get_string_member(usd_obj, "rate");
-//		gint dhcp = g_str_equal(network_method, "dhcp");
-		dlog_print(DLOG_DEBUG, LOG_TAG, "items: %s", items_obj);
-		dlog_print(DLOG_DEBUG, LOG_TAG, "usd: %s", usd_obj);
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %s", bitcoin_rate);
-//		g_object_unref(jsonParser);
+		gdouble bitcoin_rate = json_object_get_double_member(usd_obj, "rate_float");
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %g", bitcoin_rate);
+
 		return bitcoin_rate;
 	} else {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "curl fail");

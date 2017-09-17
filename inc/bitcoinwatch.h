@@ -18,4 +18,4 @@
 
 #endif /* __bitcoinwatch_H__ */
 
-gchar get_bitcoin(int);
+gdouble get_bitcoin(int);
