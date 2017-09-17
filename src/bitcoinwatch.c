@@ -15,7 +15,6 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 {
 	char watch_text[TEXT_BUF_SIZE];
 	int hour24, minute, second;
-	gdouble bitcoin;
 
 	if (watch_time == NULL)
 		return;
@@ -24,7 +23,6 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 	watch_time_get_minute(watch_time, &minute);
 	watch_time_get_second(watch_time, &second);
 
-	dlog_print(DLOG_DEBUG, LOG_TAG, "%g",bitcoin);
 
 	if (!ambient) {
 		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%02d:%02d:%02d</align>",
