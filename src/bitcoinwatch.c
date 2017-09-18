@@ -56,7 +56,7 @@ update_bitcoin(appdata_s *ad, int ambient) //remove if unused
 	if (bitcoin==131){
 		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>...</align>");
 	} else {
-		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>%g</align>",
+		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>Ƀ&nbsp;$%g</align>",
 				bitcoin);
 	}
 	dlog_print(DLOG_DEBUG, LOG_TAG, "updated bitcoin");

@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns="http://tizen.org/ns/packages" package="org.example.bitcoinwatch" api-version="2.3.2" version="1.0.0">
-	<profile name="wearable" />
-	<watch-application appid="org.example.bitcoinwatch" exec="bitcoinwatch" ambient-support="true">
-		<icon>bitcoinwatch.png</icon>
-		<label>bitcoinwatch</label>
-	</watch-application>
-	<privileges>
-		<privilege>http://tizen.org/privilege/alarm.set</privilege>
-		<privilege>http://tizen.org/privilege/internet</privilege>
-		<privilege>http://tizen.org/privilege/network.get</privilege>
-		<privilege>http://tizen.org/privilege/network.set</privilege>
-		<privilege>http://tizen.org/privilege/network.profile</privilege>
-	</privileges>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<manifest xmlns="http://tizen.org/ns/packages" api-version="2.3.2" package="org.rbzstudios.bitcoinwatch" version="1.0.0">
+    <profile name="wearable"/>
+    <watch-application ambient-support="true" appid="org.rbzstudios.bitcoinwatch" exec="bitcoinwatch">
+        <label>bitcoinwatch</label>
+        <icon>bitcoinwatch.png</icon>
+    </watch-application>
+    <privileges>
+        <privilege>http://tizen.org/privilege/network.get</privilege>
+        <privilege>http://tizen.org/privilege/network.set</privilege>
+        <privilege>http://tizen.org/privilege/internet</privilege>
+        <privilege>http://tizen.org/privilege/alarm.set</privilege>
+        <privilege>http://tizen.org/privilege/network.profile</privilege>
+    </privileges>
 </manifest>
