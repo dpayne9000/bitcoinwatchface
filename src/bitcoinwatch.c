@@ -15,7 +15,7 @@ struct MemoryStruct {
 
 
 struct MemoryStruct chunk;
-
+static const char* _klongtimer = "_long_timer";
 
 static void
 update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
@@ -32,8 +32,8 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 
 
 	if (!ambient) {//<color=#1ec503>
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#9e9e9e><font_size=55>%02d:%02d:%02d</font_size></color></align>",
-			hour24, minute, second);
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#9e9e9e><font_size=95>%02d:%02d</font_size></color></align>",
+			hour24, minute);
 	} else {
 		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><font_size=55>%02d:%02d</font_size></align>",
 			hour24, minute);
@@ -224,7 +224,7 @@ create_base_gui(appdata_s *ad, int width, int height)
 
 	ad->label2 = elm_label_add(ad->conform);
 	evas_object_resize(ad->label2, width, height / 2);
-	evas_object_move(ad->label2, 0, height / 2);
+	evas_object_move(ad->label2, 0, height / 1.6);
 	evas_object_show(ad->label2);
 
 	/* Background */
@@ -270,10 +270,13 @@ app_create(int width, int height, void *data)
 		If this function returns true, the main loop of application starts
 		If this function returns false, the application is terminated */
 	appdata_s *ad = data;
+	Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
 
 	create_base_gui(ad, width, height);
 	//ecore_timer_add(3, sendRequest, NULL);
-	ecore_timer_add(10, bitcoin_cb, ad);
+	timer = ecore_timer_add(10, bitcoin_cb, ad);
+	evas_object_data_set(NULL, _klongtimer, timer);
+
 	dlog_print(DLOG_DEBUG, LOG_TAG, "app create");
 	return true;
 }
@@ -287,12 +290,22 @@ app_control(app_control_h app_control, void *data)
 static void
 app_pause(void *data)
 {
+	dlog_print(DLOG_DEBUG, LOG_TAG, "app pause");
+	appdata_s *ad = data;
+	Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+	ecore_timer_del(timer);
+	evas_object_data_del(NULL, _klongtimer);
 	/* Take necessary actions when application becomes invisible. */
 }
 
 static void
 app_resume(void *data)
 {
+	dlog_print(DLOG_DEBUG, LOG_TAG, "app resume");
+	appdata_s *ad = data;
+	Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+	timer = ecore_timer_add(10, bitcoin_cb, ad);
+	evas_object_data_set(NULL, _klongtimer, timer);
 	/* Take necessary actions when application becomes visible. */
 }
 
