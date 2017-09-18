@@ -217,14 +217,14 @@ create_base_gui(appdata_s *ad, int width, int height)
 
 	ad->label = elm_label_add(ad->conform);
 	evas_object_resize(ad->label, width, height / 3);
-	evas_object_move(ad->label, 0, height / 3);
+	evas_object_move(ad->label, 0, height / 3.7);
 	evas_object_show(ad->label);
 
 	/* Label*/
 
 	ad->label2 = elm_label_add(ad->conform);
 	evas_object_resize(ad->label2, width, height / 2);
-	evas_object_move(ad->label2, 0, height / 1.6);
+	evas_object_move(ad->label2, 0, height / 1.7);
 	evas_object_show(ad->label2);
 
 	/* Background */
