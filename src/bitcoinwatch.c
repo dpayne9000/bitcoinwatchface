@@ -8,6 +8,13 @@
 
 
 #define TEXT_BUF_SIZE 256
+struct MemoryStruct {
+	char *memory;
+	size_t size;
+};
+
+
+struct MemoryStruct chunk;
 
 
 static void
@@ -37,13 +44,14 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 
 
 void static
-update_bitcoin(appdata_s *ad, int ambient)
+update_bitcoin(appdata_s *ad, int ambient) //remove if unused
 {
 
 	char bitcoin_text[TEXT_BUF_SIZE];
 	gdouble bitcoin;
 
 	bitcoin = get_bitcoin(1); //needs callback to update this, so it's async
+	//bitcoin = get_null(1);
 	//get_bitcoin(ad,1);
 	snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>%g</align>",
 				bitcoin);
@@ -52,10 +60,176 @@ update_bitcoin(appdata_s *ad, int ambient)
 
 }
 Eina_Bool
-bitcoin_cb(appdata_s *ad) {
+bitcoin_cb(appdata_s *ad) { //void *data EINA_UNUSED
 	update_bitcoin(ad,0);
 	dlog_print(DLOG_DEBUG, LOG_TAG, "update cb");
 	return EINA_TRUE;
+}
+
+
+static size_t
+WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+	size_t realsize = size * nmemb;
+	struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+
+	mem->memory = realloc(mem->memory, mem->size + realsize + 1);
+	if(mem->memory == NULL) {
+		return 0;
+	}
+
+	memcpy(&(mem->memory[mem->size]), contents, realsize);
+	mem->size += realsize;
+	mem->memory[mem->size] = 0;
+
+	return realsize;
+}
+
+Eina_Bool sendRequest(void *data EINA_UNUSED)
+{
+	CURL *curl;
+	CURLcode curl_err;
+
+	chunk.memory = malloc(1);
+	chunk.size = 0;
+
+	curl = curl_easy_init();
+
+	connection_h connection;
+	int conn_err;
+	conn_err = connection_create(&connection);
+	if (conn_err != CONNECTION_ERROR_NONE) {
+		/* Error handling */
+
+		return false;
+	}
+
+	curl_easy_setopt(curl, CURLOPT_URL, "http://apidev.accuweather.com/currentconditions/v1/28143.json?language=en&apikey=hoArfRosT1215");
+
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+
+	/* we pass our 'chunk' struct to the callback function */
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+
+	curl_err = curl_easy_perform(curl);
+
+	if (curl_err != CURLE_OK) {
+		/* Error handling */
+		dlog_print(DLOG_ERROR, LOG_TAG,"curl error");
+		return false;
+	}
+
+
+	dlog_print(DLOG_INFO, LOG_TAG,chunk.memory);
+	curl_easy_cleanup(curl);
+	free(chunk.memory);
+	connection_destroy(connection);
+
+
+	return EINA_TRUE;
+}
+
+
+static void
+__proxy_changed_cb(const char* ipv4_address, const char* ipv6_address, void* user_data)
+{
+    dlog_print(DLOG_INFO, LOG_TAG, "%s callback, IPv4 address: %s, IPv6 address: %s",
+               (char *)user_data, ipv4_address, (ipv6_address ? ipv6_address : "NULL"));
+}
+
+gdouble get_bitcoin(int duh) {
+	JsonParser *jsonParser  =  NULL;
+	GError *error  =  NULL;
+	jsonParser = json_parser_new ();
+    //struct string s;
+
+    //init_string(&s);
+
+	CURL *curl;
+	CURLcode res;
+
+	chunk.memory = malloc(1);
+	chunk.size = 0;
+
+	curl = curl_easy_init();
+
+	if (curl){
+		connection_h connection;
+		int conn_err;
+		conn_err = connection_create(&connection);
+		if (conn_err != CONNECTION_ERROR_NONE) {
+			/* Error handling */
+			dlog_print(DLOG_DEBUG, LOG_TAG, "conenction error");
+			return 130;
+		}
+
+		//connection_wifi_state_e wifi_state;
+		//connection_get_wifi_state(connection, &wifi_state);
+		char *proxy_address;
+		conn_err = connection_get_proxy(connection, CONNECTION_ADDRESS_FAMILY_IPV4, &proxy_address);
+
+		conn_err = connection_set_proxy_address_changed_cb(connection,
+		                                                   __proxy_changed_cb, NULL);
+
+		if (conn_err != CONNECTION_ERROR_NONE) {
+		    /* Error handling */
+			dlog_print(DLOG_ERROR, LOG_TAG, "proxy cb error");
+		    return 0;
+		}
+
+		//if (wifi_state == CONNECTION_WIFI_STATE_DISCONNECTED ){
+		//
+		//	if (conn_err == CONNECTION_ERROR_NONE && proxy_address) {
+
+		//		dlog_print(DLOG_DEBUG, LOG_TAG, "wifi disconnected");
+				//curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
+				//dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
+		//	}
+		//	if (conn_err != CONNECTION_ERROR_NONE) {
+		//		dlog_print(DLOG_DEBUG, LOG_TAG, "proxy error address %s", conn_err);
+		//	}
+		//}
+
+						curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
+						dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
+
+
+
+
+		curl_easy_setopt(curl, CURLOPT_URL, "http://api.coindesk.com/v1/bpi/currentprice.json");
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+		res = curl_easy_perform(curl);
+		if (res != CURLE_OK) {
+			return 131;
+		}
+
+		curl_easy_cleanup(curl);
+		connection_destroy(connection);
+		dlog_print(DLOG_DEBUG, LOG_TAG, chunk.memory);
+
+
+		json_parser_load_from_data(jsonParser, chunk.memory, strlen(chunk.memory),NULL);
+		dlog_print(DLOG_DEBUG, LOG_TAG, "response %s", chunk.memory);
+		JsonObject *object;
+		JsonNode *root;
+
+
+		root = json_parser_get_root(jsonParser);
+
+		JsonObject *items_obj = json_object_get_object_member(json_node_get_object(root), "bpi");
+		JsonObject *usd_obj = json_object_get_object_member(items_obj,"USD");
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Size: %d", json_object_get_size(items_obj));
+		gdouble bitcoin_rate = json_object_get_double_member(usd_obj, "rate_float");
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %g", bitcoin_rate);
+		free(chunk.memory);
+		//free other memory
+		return bitcoin_rate;
+
+	} else {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "curl fail");
+		return 420;
+	}
 }
 
 static void
@@ -96,8 +270,10 @@ create_base_gui(appdata_s *ad, int width, int height)
 		dlog_print(DLOG_ERROR, LOG_TAG, "failed to get current time. err = %d", ret);
 
 	update_watch(ad, watch_time, 0);
-	update_bitcoin(ad,0);
-	ecore_timer_add(3, bitcoin_cb(ad), NULL);
+	//update_bitcoin(ad,0);
+	//
+
+	dlog_print(DLOG_DEBUG, LOG_TAG, "create ui");
 	watch_time_delete(watch_time);
 
 	/* Show window after base gui is set up */
@@ -114,10 +290,13 @@ app_create(int width, int height, void *data)
 	appdata_s *ad = data;
 
 	create_base_gui(ad, width, height);
-
+	//ecore_timer_add(3, sendRequest, NULL);
+	ecore_timer_add(10, bitcoin_cb, ad);
+	dlog_print(DLOG_DEBUG, LOG_TAG, "app create");
 	return true;
 }
 
+// remove next three functions
 struct string {
   char *ptr;
   size_t len;
@@ -148,100 +327,7 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
   return size*nmemb;
 }
 
-static void
-__proxy_changed_cb(const char* ipv4_address, const char* ipv6_address, void* user_data)
-{
-    dlog_print(DLOG_INFO, LOG_TAG, "%s callback, IPv4 address: %s, IPv6 address: %s",
-               (char *)user_data, ipv4_address, (ipv6_address ? ipv6_address : "NULL"));
-}
 
-gdouble get_bitcoin(int duh) {
-	JsonParser *jsonParser  =  NULL;
-	GError *error  =  NULL;
-	jsonParser = json_parser_new ();
-    struct string s;
-
-    init_string(&s);
-
-	CURL *curl;
-	CURLcode res;
-	curl = curl_easy_init();
-
-	if (curl){
-		connection_h connection;
-		int conn_err;
-		conn_err = connection_create(&connection);
-		if (conn_err != CONNECTION_ERROR_NONE) {
-			/* Error handling */
-			dlog_print(DLOG_DEBUG, LOG_TAG, "conenction error");
-			return 130;
-		}
-
-		//connection_wifi_state_e wifi_state;
-		//connection_get_wifi_state(connection, &wifi_state);
-		char *proxy_address;
-		conn_err = connection_get_proxy(connection, CONNECTION_ADDRESS_FAMILY_IPV4, &proxy_address);
-
-		conn_err = connection_set_proxy_address_changed_cb(connection,
-		                                                   __proxy_changed_cb, NULL);
-
-		if (conn_err != CONNECTION_ERROR_NONE) {
-		    /* Error handling */
-			dlog_print(DLOG_DEBUG, LOG_TAG, "proxy cb error");
-		    return 0;
-		}
-
-		//if (wifi_state == CONNECTION_WIFI_STATE_DISCONNECTED ){
-		//
-		//	if (conn_err == CONNECTION_ERROR_NONE && proxy_address) {
-
-		//		dlog_print(DLOG_DEBUG, LOG_TAG, "wifi disconnected");
-				//curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
-				//dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
-		//	}
-		//	if (conn_err != CONNECTION_ERROR_NONE) {
-		//		dlog_print(DLOG_DEBUG, LOG_TAG, "proxy error address %s", conn_err);
-		//	}
-		//}
-
-						curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
-						dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
-
-
-
-
-		curl_easy_setopt(curl, CURLOPT_URL, "http://api.coindesk.com/v1/bpi/currentprice.json");
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
-		res = curl_easy_perform(curl);
-		if (res != CURLE_OK) {
-			return 131;
-		}
-
-		curl_easy_cleanup(curl);
-		connection_destroy(connection);
-
-		json_parser_load_from_data(jsonParser, s.ptr, strlen(s.ptr),NULL);
-		dlog_print(DLOG_DEBUG, LOG_TAG, "response %s", s.ptr);
-		JsonObject *object;
-		JsonNode *root;
-
-
-		root = json_parser_get_root(jsonParser);
-
-		JsonObject *items_obj = json_object_get_object_member(json_node_get_object(root), "bpi");
-		JsonObject *usd_obj = json_object_get_object_member(items_obj,"USD");
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Size: %d", json_object_get_size(items_obj));
-		gdouble bitcoin_rate = json_object_get_double_member(usd_obj, "rate_float");
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %g", bitcoin_rate);
-
-		return bitcoin_rate;
-
-	} else {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "curl fail");
-		return 420;
-	}
-}
 
 static void
 app_control(app_control_h app_control, void *data)
@@ -264,6 +350,7 @@ app_resume(void *data)
 static void
 app_terminate(void *data)
 {
+	dlog_print(DLOG_ERROR, LOG_TAG, "app terminated");
 	/* Release all resources. */
 }
 

@@ -7,6 +7,7 @@
 #include <dlog.h>
 #include <json-glib.h>
 #include <Ecore.h>
+
 #ifdef  LOG_TAG
 #undef  LOG_TAG
 #endif
@@ -27,4 +28,5 @@ typedef struct appdata {
 } appdata_s;
 
 gdouble get_bitcoin(int);
+//Eina_Bool sendRequest(EINA_UNUSED *);
 Eina_Bool bitcoin_cb(appdata_s *);
