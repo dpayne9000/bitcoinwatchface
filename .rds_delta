@@ -3,4 +3,5 @@
 #modify
 author-signature.xml
 signature1.xml
-shared/res/bitcoinwatch.png
+bin/bitcoinwatch
+tizen-manifest.xml

@@ -153,7 +153,7 @@ gdouble get_bitcoin(int duh) {
 
 
 
-		curl_easy_setopt(curl, CURLOPT_URL, "http://api.coindesk.com/v1/bpi/currentprice.json");
+		curl_easy_setopt(curl, CURLOPT_URL, "https://blockchain.info/ticker");
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
 		res = curl_easy_perform(curl);
@@ -175,10 +175,10 @@ gdouble get_bitcoin(int duh) {
 
 		root = json_parser_get_root(jsonParser);
 
-		JsonObject *items_obj = json_object_get_object_member(json_node_get_object(root), "bpi");
-		JsonObject *usd_obj = json_object_get_object_member(items_obj,"USD");
+		JsonObject *items_obj = json_object_get_object_member(json_node_get_object(root), "USD");
+//		JsonObject *usd_obj = json_object_get_object_member(items_obj,"USD");
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Size: %d", json_object_get_size(items_obj));
-		gdouble bitcoin_rate = json_object_get_double_member(usd_obj, "rate_float");
+		gdouble bitcoin_rate = json_object_get_double_member(items_obj, "last");
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %g", bitcoin_rate);
 		free(chunk.memory);
 		//free other memory

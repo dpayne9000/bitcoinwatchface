@@ -4,11 +4,11 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
 <Reference URI="author-signature.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>ME/4+wHxrhGsxMdM50WFEBKsHJmj4jUHRR08UcBUrIY=</DigestValue>
+<DigestValue>jbQwF0R1M7Pa+YUvj3R0gggrR5y4F4VPegIhkQwJ7Ec=</DigestValue>
 </Reference>
 <Reference URI="bin%2Fbitcoinwatch">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>aqOKAqZXoe+XdEI3g8VKoBS+LrounpirRXesNNyeJHA=</DigestValue>
+<DigestValue>YC09NRj3aX6+u5PGswvte5/NUyfhWEnj2uu0j5fZi7Q=</DigestValue>
 </Reference>
 <Reference URI="res%2Fimages%2Fbackground.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -20,7 +20,7 @@
 </Reference>
 <Reference URI="tizen-manifest.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>/5wNwHHBuHmT3ybX1UPAMEEW+ioXCZ017EIkFwCzWU4=</DigestValue>
+<DigestValue>/azP3wuNKpCCoCi/OT4iqFN+4I3oMKkRLamuY0W2wok=</DigestValue>
 </Reference>
 <Reference URI="#prop">
 <Transforms>
@@ -31,11 +31,11 @@
 </Reference>
 </SignedInfo>
 <SignatureValue>
-UnoziGVA75l06JKPLaoqjmfIPO7KuNvEWEdsdCs4NR89Zh1Fe9liAOT2Y+pq8zp3n7JwLDgeHZIh
-j0irR2raTYWJeRToLozUhtGSN/f1J717ZVpmiGCz+nPk8rU+2Dp61sqex8Mj75zNx0uwLoTEfzoO
-e88rp8Z2zR7pdlmLi79GWzfEKGtEe7TLVrs/1ZbzMaeQXnhnfsGYL/1zPPtqbGwJ9mRUbW+PCC/W
-5DZqL+Jj/K6NOTN6AOHKRRmcyfHS9jlwB8vJoKe8CHD1UbFva/d6amHCe6uMX+vyLZWJR0CZCySe
-1zackv1VWnKWqFAqBbUStHilQmh85JTnK+Xr4g==
+XfWxFVaOb9E3UZ0bCz/OQ3za7qE18qz+Tn+RgFy8ezSosEUPADx+IdqG/k4HsfaQfKFqXOHXYKDd
+PwOnb87dFNjOmaQf7NudJSWsWaU03n0xOWn6wYTVVjIQX2gI+GUbJRijd9Q1g44WWhPWhyLePh1/
+7tX9mRVieXhUbuamVWJjGEdSfkz+paMIYb0Ml4BDZHHDAyUz+SrTLemTjrWcwO3grhhClQGVDLy6
+gXfkwj54o1e3xu0onWIj8S74A214DQTNdOWYqUK/vDwHB2/0l3KJm6SFNmfA2LToIlYEN3F13fbT
+swsFLiREmE9oh79+h8K7BJnK0EHca4qY/FRRHQ==
 </SignatureValue>
 <KeyInfo>
 <X509Data>
