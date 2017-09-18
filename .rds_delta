@@ -1,5 +1,7 @@
 #delete
 #add
+res/images/
+res/images/background.png
 #modify
 author-signature.xml
 signature1.xml

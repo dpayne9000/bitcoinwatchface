@@ -25,6 +25,7 @@ typedef struct appdata {
 	Evas_Object *conform;
 	Evas_Object *label;
 	Evas_Object *label2;
+	Evas_Object *background;
 } appdata_s;
 
 gdouble get_bitcoin(int);

@@ -31,11 +31,11 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 	watch_time_get_second(watch_time, &second);
 
 
-	if (!ambient) {
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%02d:%02d:%02d</align>",
+	if (!ambient) {//<color=#1ec503>
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#b7b7b7><font_size=55>%02d:%02d:%02d</font_size></color></align>",
 			hour24, minute, second);
 	} else {
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center>%02d:%02d</align>",
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><font_size=55>%02d:%02d</font_size></align>",
 			hour24, minute);
 	}
 
@@ -53,10 +53,10 @@ update_bitcoin(appdata_s *ad, int ambient) //remove if unused
 	bitcoin = get_bitcoin(1); //needs callback to update this, so it's async
 	//bitcoin = get_null(1);
 	//get_bitcoin(ad,1);
-	if (bitcoin==131){
-		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>...</align>");
+	if (bitcoin==131){ // add case for ambient with no color
+		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#dfdfdf>...</color></align>");
 	} else {
-		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>Ƀ&nbsp;$%g</align>",
+		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#8e7044><font_size=45>Ƀ&</font_size></color><br/><color=#aaaaaa><font_size=35>$%g</font_size></color></align>",
 				bitcoin);
 	}
 	dlog_print(DLOG_DEBUG, LOG_TAG, "updated bitcoin");
@@ -196,7 +196,7 @@ create_base_gui(appdata_s *ad, int width, int height)
 {
 	int ret;
 	watch_time_h watch_time = NULL;
-
+	int err;
 	/* Window */
 	ret = watch_app_get_elm_win(&ad->win);
 	if (ret != APP_ERROR_NONE) {
@@ -207,22 +207,45 @@ create_base_gui(appdata_s *ad, int width, int height)
 	evas_object_resize(ad->win, width, height);
 
 	/* Conformant */
+
 	ad->conform = elm_conformant_add(ad->win);
 	evas_object_size_hint_weight_set(ad->conform, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_win_resize_object_add(ad->win, ad->conform);
 	evas_object_show(ad->conform);
 
 	/* Label*/
+
 	ad->label = elm_label_add(ad->conform);
 	evas_object_resize(ad->label, width, height / 3);
 	evas_object_move(ad->label, 0, height / 3);
 	evas_object_show(ad->label);
 
 	/* Label*/
+
 	ad->label2 = elm_label_add(ad->conform);
 	evas_object_resize(ad->label2, width, height / 2);
 	evas_object_move(ad->label2, 0, height / 2);
 	evas_object_show(ad->label2);
+
+	/* Background */
+	/*
+	ad->background = evas_object_image_add(ad->conform);
+	evas_object_image_file_set(ad->background, "./res/images/background.png", NULL);
+	err = evas_object_image_load_error_get(ad->background);
+	 if (err != EVAS_LOAD_ERROR_NONE)
+	   {
+	      dlog_print(DLOG_ERROR, LOG_TAG, "could not load image ./res/images/background.png. error string is \"%s\"\n",
+	              evas_load_error_str(err));
+	   }
+
+
+	    /* Set the size and position of the image on the image object area */
+		/*
+	    evas_object_image_fill_set(ad->background, 0, 0, width, height);
+
+	    evas_object_move(ad->background, 0, 0);
+	    evas_object_resize(ad->background, width, height/2);
+	    evas_object_show(ad->background);*/
 
 	ret = watch_time_get_current_time(&watch_time);
 	if (ret != APP_ERROR_NONE)
@@ -299,6 +322,8 @@ app_ambient_tick(watch_time_h watch_time, void *data)
 static void
 app_ambient_changed(bool ambient_mode, void *data)
 {
+	// destroy old timer
+	//start new timer with ambient mode enabled, for longer delay between ticks
 	/* Update your watch UI to conform to the ambient mode */
 }
 
