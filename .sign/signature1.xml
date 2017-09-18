@@ -4,11 +4,11 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
 <Reference URI="author-signature.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>dJDsPoLjZyVmw6yaR0GCM7bpMKyUpp73aVRaNz7gXhY=</DigestValue>
+<DigestValue>ME/4+wHxrhGsxMdM50WFEBKsHJmj4jUHRR08UcBUrIY=</DigestValue>
 </Reference>
 <Reference URI="bin%2Fbitcoinwatch">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>uJmfy4xHe173ObB1IcQ0/Lk7NMt+g0bL9ZK9HNHeMSw=</DigestValue>
+<DigestValue>aqOKAqZXoe+XdEI3g8VKoBS+LrounpirRXesNNyeJHA=</DigestValue>
 </Reference>
 <Reference URI="res%2Fimages%2Fbackground.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -16,11 +16,11 @@
 </Reference>
 <Reference URI="shared%2Fres%2Fbitcoinwatch.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>1d0oEZHqPn+QzNzGIHwj9ODby6x9ggFs9uOsav6jPNs=</DigestValue>
+<DigestValue>0RVU7WQr+PSpptgpt/wVj23/HOn4XKdQMBXnG1OzUss=</DigestValue>
 </Reference>
 <Reference URI="tizen-manifest.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>YSQ2K5wDVKtBfFeLgJbQB8Dc/OLRsAMEwafbNlCkLcw=</DigestValue>
+<DigestValue>/5wNwHHBuHmT3ybX1UPAMEEW+ioXCZ017EIkFwCzWU4=</DigestValue>
 </Reference>
 <Reference URI="#prop">
 <Transforms>
@@ -31,11 +31,11 @@
 </Reference>
 </SignedInfo>
 <SignatureValue>
-EbFOK9YZiss5XoLDFEsapH63cKpiL4AR0f20/JJjx6htttq7zy1HGrD3QH1L1xVrwre84ex2tSvI
-rBW1fHYVsCBAj5Tqq0j6bihi3pjQodDS5pRONFkz7gIq1yCpxHiGWepdvpGmTNL9XJJjUG1kDmbj
-kCgg8NfJEVKWC6/Vr1znyGESfm5QZtgnnQOZ2iPHqYzskgh7zj4J84tXKRAO5Yhu8FPxW2RhJAyg
-6GHG4g694VcrsGG6Z/248Havj2vgtPOa7yIE6DbsIV/Uqyw1gBE9yt274fsPryjzcs526AcyeIQk
-y8xAKa2fhHcn1mBA3KF/vo6fBXqs7YcW78jlqQ==
+UnoziGVA75l06JKPLaoqjmfIPO7KuNvEWEdsdCs4NR89Zh1Fe9liAOT2Y+pq8zp3n7JwLDgeHZIh
+j0irR2raTYWJeRToLozUhtGSN/f1J717ZVpmiGCz+nPk8rU+2Dp61sqex8Mj75zNx0uwLoTEfzoO
+e88rp8Z2zR7pdlmLi79GWzfEKGtEe7TLVrs/1ZbzMaeQXnhnfsGYL/1zPPtqbGwJ9mRUbW+PCC/W
+5DZqL+Jj/K6NOTN6AOHKRRmcyfHS9jlwB8vJoKe8CHD1UbFva/d6amHCe6uMX+vyLZWJR0CZCySe
+1zackv1VWnKWqFAqBbUStHilQmh85JTnK+Xr4g==
 </SignatureValue>
 <KeyInfo>
 <X509Data>

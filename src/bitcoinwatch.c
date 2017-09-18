@@ -32,7 +32,7 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 
 
 	if (!ambient) {//<color=#1ec503>
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#b7b7b7><font_size=55>%02d:%02d:%02d</font_size></color></align>",
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#9e9e9e><font_size=55>%02d:%02d:%02d</font_size></color></align>",
 			hour24, minute, second);
 	} else {
 		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><font_size=55>%02d:%02d</font_size></align>",
