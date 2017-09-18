@@ -53,8 +53,12 @@ update_bitcoin(appdata_s *ad, int ambient) //remove if unused
 	bitcoin = get_bitcoin(1); //needs callback to update this, so it's async
 	//bitcoin = get_null(1);
 	//get_bitcoin(ad,1);
-	snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>%g</align>",
+	if (bitcoin==131){
+		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>...</align>");
+	} else {
+		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center>%g</align>",
 				bitcoin);
+	}
 	dlog_print(DLOG_DEBUG, LOG_TAG, "updated bitcoin");
 	elm_object_text_set(ad->label2, bitcoin_text);
 
@@ -85,50 +89,6 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 	return realsize;
 }
 
-Eina_Bool sendRequest(void *data EINA_UNUSED)
-{
-	CURL *curl;
-	CURLcode curl_err;
-
-	chunk.memory = malloc(1);
-	chunk.size = 0;
-
-	curl = curl_easy_init();
-
-	connection_h connection;
-	int conn_err;
-	conn_err = connection_create(&connection);
-	if (conn_err != CONNECTION_ERROR_NONE) {
-		/* Error handling */
-
-		return false;
-	}
-
-	curl_easy_setopt(curl, CURLOPT_URL, "http://apidev.accuweather.com/currentconditions/v1/28143.json?language=en&apikey=hoArfRosT1215");
-
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-
-	/* we pass our 'chunk' struct to the callback function */
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-
-	curl_err = curl_easy_perform(curl);
-
-	if (curl_err != CURLE_OK) {
-		/* Error handling */
-		dlog_print(DLOG_ERROR, LOG_TAG,"curl error");
-		return false;
-	}
-
-
-	dlog_print(DLOG_INFO, LOG_TAG,chunk.memory);
-	curl_easy_cleanup(curl);
-	free(chunk.memory);
-	connection_destroy(connection);
-
-
-	return EINA_TRUE;
-}
-
 
 static void
 __proxy_changed_cb(const char* ipv4_address, const char* ipv6_address, void* user_data)
@@ -141,9 +101,6 @@ gdouble get_bitcoin(int duh) {
 	JsonParser *jsonParser  =  NULL;
 	GError *error  =  NULL;
 	jsonParser = json_parser_new ();
-    //struct string s;
-
-    //init_string(&s);
 
 	CURL *curl;
 	CURLcode res;
@@ -201,6 +158,7 @@ gdouble get_bitcoin(int duh) {
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
 		res = curl_easy_perform(curl);
 		if (res != CURLE_OK) {
+			dlog_print(DLOG_ERROR, LOG_TAG, "curl error");
 			return 131;
 		}
 
@@ -224,6 +182,7 @@ gdouble get_bitcoin(int duh) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %g", bitcoin_rate);
 		free(chunk.memory);
 		//free other memory
+		g_object_unref(jsonParser);
 		return bitcoin_rate;
 
 	} else {
@@ -270,7 +229,7 @@ create_base_gui(appdata_s *ad, int width, int height)
 		dlog_print(DLOG_ERROR, LOG_TAG, "failed to get current time. err = %d", ret);
 
 	update_watch(ad, watch_time, 0);
-	//update_bitcoin(ad,0);
+	update_bitcoin(ad,0);
 	//
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, "create ui");
