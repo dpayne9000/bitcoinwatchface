@@ -32,10 +32,10 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 
 
 	if (!ambient) {//<color=#1ec503>
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#9e9e9e><font_size=95>%02d:%02d</font_size></color></align>",
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#818181><font_size=95>%02d:%02d</font_size></color></align>",
 			hour24, minute);
 	} else {
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><font_size=55>%02d:%02d</font_size></align>",
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#717171><font_size=55>%02d:%02d</font_size></color></align>",
 			hour24, minute);
 	}
 
@@ -54,9 +54,9 @@ update_bitcoin(appdata_s *ad, int ambient) //remove if unused
 	//bitcoin = get_null(1);
 	//get_bitcoin(ad,1);
 	if (bitcoin==131){ // add case for ambient with no color
-		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#dfdfdf>...</color></align>");
+		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#818181>...</color></align>");
 	} else {
-		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#aaaaaa><font_size=35>$%g<color=#8e7044><font_size=35> BTC</font_size></color></font_size></color></align>",
+		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#818181><font_size=35>$%g<color=#8e7044><font_size=35> BTC</font_size></color></font_size></color></align>",
 				bitcoin);
 	}
 	dlog_print(DLOG_DEBUG, LOG_TAG, "updated bitcoin");
