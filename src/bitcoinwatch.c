@@ -314,6 +314,10 @@ app_terminate(void *data)
 {
 	dlog_print(DLOG_ERROR, LOG_TAG, "app terminated");
 	/* Release all resources. */
+	appdata_s *ad = data;
+	Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+	ecore_timer_del(timer);
+	evas_object_data_del(NULL, _klongtimer);
 }
 
 static void

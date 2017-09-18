@@ -4,7 +4,7 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
 <Reference URI="bin%2Fbitcoinwatch">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>hs/VC0me3ZfFKIksnuYfN1eGoF7YJETL6oaY8iWhHLw=</DigestValue>
+<DigestValue>om+AYRlDhS0291b70PGIgJyfZoN82CJIGCuBvsYcA0w=</DigestValue>
 </Reference>
 <Reference URI="res%2Fimages%2Fbackground.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -27,11 +27,11 @@
 </Reference>
 </SignedInfo>
 <SignatureValue>
-fVtSbTyoFs50myn3zzB8IW11MRcnRhJxXBOSNEyykmECcHaQmHxB4Di5ANvEdSv1a2rVANDoNWGq
-We+8PvOW/f5/2qKRDBfqWs3TOTl50CYpoCRcdviNvvNzT2jh2itVHtowyxGgnCjKTXdlJWkgwkfi
-N5cuGjhJvBa+Kk642LVYCmifYV7dyswiFMs5OYtbfKenyLSK2NiT6fJQ/kDCQCAHT3o06FttIvIr
-Ri3frQGMCukSyKmOl0ApuIsOgZiIExaEx2Zq9UdgfwPED9327CQP17qgWZlrYd2jKJ4hxkAK5gdw
-WhLxA36URZDbUyEa/6t0bC2Dom9MPU353wjDLQ==
+CkU8Ao0rtZn++/vM4isVAsNMDnL5qB7HiqEz58oKJ8AAepRovk77x3y1VAEpw8vfSagrHSrwf02y
+MHcVoHXJmMUjG+38mZ2oKOCrOzbEPLY/XZRHh6PywY0mv533kInD57aQAEQFeY2G7X0bzJPYqQ8O
+DgKwHT4mHi1XgeS1rGDxL1fXOkCwRwADafqvSuUAvauQvdy8XugnaR88VyQMzX/ac2Tz63SrKhuU
+0oRKvy0HPouDSALOpYrjmNmv0DwgoxT8+Dmay/9DEQHCf8Ljh3HiZRNT98ff/kEiegX7K5mUk824
+zEE/FqDC2ajkCFCfluphCW8zMYWVUpPMLnJDSg==
 </SignatureValue>
 <KeyInfo>
 <X509Data>
