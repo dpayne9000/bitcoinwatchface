@@ -56,7 +56,7 @@ update_bitcoin(appdata_s *ad, int ambient) //remove if unused
 	if (bitcoin==131){ // add case for ambient with no color
 		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#dfdfdf>...</color></align>");
 	} else {
-		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#8e7044><font_size=45>Ƀ&</font_size></color><br/><color=#aaaaaa><font_size=35>$%g</font_size></color></align>",
+		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#aaaaaa><font_size=35>$%g<color=#8e7044><font_size=35> BTC</font_size></color></font_size></color></align>",
 				bitcoin);
 	}
 	dlog_print(DLOG_DEBUG, LOG_TAG, "updated bitcoin");
