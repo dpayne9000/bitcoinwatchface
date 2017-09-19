@@ -8,6 +8,7 @@
 
 
 #define TEXT_BUF_SIZE 256
+#define AMPM_BUF_SIZE 256
 struct MemoryStruct {
 	char *memory;
 	size_t size;
@@ -17,12 +18,20 @@ struct MemoryStruct {
 struct MemoryStruct chunk;
 static const char* _klongtimer = "_long_timer";
 
+char*
+concat(char* first, char* second) {
+	char* result = malloc(snprintf(NULL, 0, "%s%s", first, second)+1);
+	sprintf(result, "%s%s", first, second);
+
+	return result;
+}
+
 static void
 update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 {
 	char watch_text[TEXT_BUF_SIZE];
 	int hour24, hour, minute, second;
-	char ampm[TEXT_BUF_SIZE];
+	char ampm[AMPM_BUF_SIZE];
 
 	if (watch_time == NULL)
 		return;
@@ -33,28 +42,21 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 	watch_time_get_second(watch_time, &second);
 
 	if (hour24>12){
-		snprintf(ampm, TEXT_BUF_SIZE, "<align=right><color=#e4e4e4><font_size=35>PM</font_size></color></align>");
+		snprintf(ampm, AMPM_BUF_SIZE, "<font_size=35>PM</font_size></color></align>");
+
 	} else {
-		snprintf(ampm, TEXT_BUF_SIZE, "<align=right><color=#e4e4e4><font_size=35>AM</font_size></color></align>");
+		snprintf(ampm, AMPM_BUF_SIZE, "<font_size=35>AM</font_size></color></align>");
 	}
 
-	//char *search_place_by_area_data = malloc(BUF_SIZE * sizeof(char));
-	//char *watch_text = malloc(BUF_SIZE * sizeof(char));
-
-	//if (!ambient) {//<color=#1ec503>
-		//int len = snprintf(NULL, 0, "<align=center><color=#e4e4e4><font_size=95>%d:%02d</font_size></color></align>",
-		//		hour, minute);
-		//char watch_text = malloc(len + 1);
-
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=right><color=#e4e4e4><font_size=95>%d:%02d</font_size></color></align>",
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#e4e4e4><font_size=95>%d:%02d</font_size>",
 				hour, minute);
 
 
 	//}
-	elm_object_text_set(ad->label, watch_text);
+	elm_object_text_set(ad->label, concat(watch_text,ampm));
 
 //}
-	elm_object_text_set(ad->ampm, ampm);
+	//elm_object_text_set(ad->ampm, ampm);
 }
 
 
@@ -231,13 +233,13 @@ create_base_gui(appdata_s *ad, int width, int height)
 	/* Label*/
 
 	ad->label = elm_label_add(ad->conform);
-	evas_object_resize(ad->label, width-90, height / 3);
+	evas_object_resize(ad->label, width, height / 3);
 	evas_object_move(ad->label, 0, height / 3.7);
 	evas_object_show(ad->label);
 
 	/* ampm */
 	ad->ampm = elm_label_add(ad->conform);
-	evas_object_resize(ad->ampm, width-40, height / 3);//-20
+	evas_object_resize(ad->ampm, width, height / 3);//-20
 	evas_object_move(ad->ampm, 0, height / 2.3);
 	evas_object_show(ad->ampm);
 

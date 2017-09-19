@@ -4,7 +4,7 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
 <Reference URI="bin%2Fbitcoinwatch">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>6fi7gJzpsYkKSAuCdwmYIcJ3+M9ZYtsJwjPllG/rQi4=</DigestValue>
+<DigestValue>hPMgTiWpDN04hS38M37U93gJppExAu8C+jQ6+oo0M2w=</DigestValue>
 </Reference>
 <Reference URI="res%2Fimages%2Fbackground.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -16,7 +16,7 @@
 </Reference>
 <Reference URI="tizen-manifest.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>wHuYRSXQbfWa3gICMhien29OtuFr23hvdPAl/GrF81Q=</DigestValue>
+<DigestValue>CJqchOSDHs6dS0+5ZgPXeYRPUlSPHW6PMabxhiJCkMI=</DigestValue>
 </Reference>
 <Reference URI="#prop">
 <Transforms>
@@ -27,11 +27,11 @@
 </Reference>
 </SignedInfo>
 <SignatureValue>
-Z5gVGWYy+FaJTiEpNr76Vkf6GcbWpR5XA1Va9FyTuL8vDvUUF+9BE7ErWSPe5uajShR8IjCHJd7P
-C6NSLuiB9RlM9J0g4+bZanO+uBkhelHiNutWP0JD62sAPB13H40rGgXSSYezm4iYmaZyI/4teLZz
-JvYBxLhfcpOXK1ySz7UB1q/3ZbeMIrlJC5JlHbmlyXmwDgfeiJmOalUKbI6jwIxEU3R9Bu5AOKNq
-c9BhUkGjAlKCiaeBX4c1jnNB/uk6PHsgL2cOM/qGIuGYgPh9kDa7y8QWFke684nCivoQ6PsfFib9
-3LuXSPF2l2Z2EY/zTkGWQQSFDaWj+LXTc7ugUg==
+R/XOK5YwgMTucdHbe8L54r1j74qGBRUbgZ+5NteyALC+MNeOIbVol0chLIQTuP6iF6ImpfBzvzl9
++IcuzUA3LSQAbIh6ebmWaea4vbfiS7W3/aL4OvwB3WVLEG2X5rcuRykhf7qN5tAM4rpcUtSCi5XU
+8cQLbh3NWE8elEykcvsMsAbBXbEOdb9SsCxI4fCgLrh9VCY224qz05Vju1K1+1d2Tzkxlk5iRRfq
+8mMXERTuWAYFXzyE29DC93t0pd5WCk9N0aHFhrN+9QB2Fb6mgwGQ43eoWBTrWbzeUefAqwbe+Qe4
+FISi0/jJID66eyFvQ5WYYkyySPT1Q2lTF3TQnA==
 </SignatureValue>
 <KeyInfo>
 <X509Data>

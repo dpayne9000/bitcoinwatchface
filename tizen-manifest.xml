@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<manifest xmlns="http://tizen.org/ns/packages" api-version="2.3.2" package="org.rbzstudios.bitcoinwatch" version="1.0.0">
+<manifest xmlns="http://tizen.org/ns/packages" api-version="2.3.2" package="org.rbzstudios.btcwatchtwelve" version="1.0.0">
     <profile name="wearable"/>
-    <watch-application ambient-support="true" appid="org.rbzstudios.bitcoinwatch" exec="bitcoinwatch">
+    <watch-application ambient-support="true" appid="org.rbzstudios.btcwatchtwelve" exec="bitcoinwatch">
         <label>Bitcoin Watch</label>
         <icon>bitcoinwatch.png</icon>
     </watch-application>
