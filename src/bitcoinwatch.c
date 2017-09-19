@@ -21,25 +21,40 @@ static void
 update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 {
 	char watch_text[TEXT_BUF_SIZE];
-	int hour24, minute, second;
+	int hour24, hour, minute, second;
+	char ampm[TEXT_BUF_SIZE];
 
 	if (watch_time == NULL)
 		return;
 
 	watch_time_get_hour24(watch_time, &hour24);
+	watch_time_get_hour(watch_time, &hour);
 	watch_time_get_minute(watch_time, &minute);
 	watch_time_get_second(watch_time, &second);
 
-
-	if (!ambient) {//<color=#1ec503>
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#e4e4e4><font_size=95>%02d:%02d</font_size></color></align>",
-			hour24, minute);
-	} else { //make colors darker for ambient mode
-		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#e4e4e4><font_size=55>%02d:%02d</font_size></color></align>",
-			hour24, minute);
+	if (hour24>12){
+		snprintf(ampm, TEXT_BUF_SIZE, "<align=right><color=#e4e4e4><font_size=35>PM</font_size></color></align>");
+	} else {
+		snprintf(ampm, TEXT_BUF_SIZE, "<align=right><color=#e4e4e4><font_size=35>AM</font_size></color></align>");
 	}
 
+	//char *search_place_by_area_data = malloc(BUF_SIZE * sizeof(char));
+	//char *watch_text = malloc(BUF_SIZE * sizeof(char));
+
+	//if (!ambient) {//<color=#1ec503>
+		//int len = snprintf(NULL, 0, "<align=center><color=#e4e4e4><font_size=95>%d:%02d</font_size></color></align>",
+		//		hour, minute);
+		//char watch_text = malloc(len + 1);
+
+		snprintf(watch_text, TEXT_BUF_SIZE, "<align=right><color=#e4e4e4><font_size=95>%d:%02d</font_size></color></align>",
+				hour, minute);
+
+
+	//}
 	elm_object_text_set(ad->label, watch_text);
+
+//}
+	elm_object_text_set(ad->ampm, ampm);
 }
 
 
@@ -216,9 +231,15 @@ create_base_gui(appdata_s *ad, int width, int height)
 	/* Label*/
 
 	ad->label = elm_label_add(ad->conform);
-	evas_object_resize(ad->label, width, height / 3);
+	evas_object_resize(ad->label, width-90, height / 3);
 	evas_object_move(ad->label, 0, height / 3.7);
 	evas_object_show(ad->label);
+
+	/* ampm */
+	ad->ampm = elm_label_add(ad->conform);
+	evas_object_resize(ad->ampm, width-40, height / 3);//-20
+	evas_object_move(ad->ampm, 0, height / 2.3);
+	evas_object_show(ad->ampm);
 
 	/* Label*/
 
