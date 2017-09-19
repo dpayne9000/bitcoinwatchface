@@ -291,10 +291,10 @@ static void
 app_pause(void *data)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "app pause");
-	appdata_s *ad = data;
-	Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
-	ecore_timer_del(timer);
-	evas_object_data_del(NULL, _klongtimer);
+	//appdata_s *ad = data;
+	//Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+	//ecore_timer_del(timer);
+	//evas_object_data_del(NULL, _klongtimer);
 	/* Take necessary actions when application becomes invisible. */
 }
 
@@ -302,10 +302,15 @@ static void
 app_resume(void *data)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "app resume");
-	appdata_s *ad = data;
-	Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
-	timer = ecore_timer_add(10, bitcoin_cb, ad);
-	evas_object_data_set(NULL, _klongtimer, timer);
+	//appdata_s *ad = data;
+
+	//Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+
+	//ecore_timer_del(timer); //delete old timer
+	//evas_object_data_del(NULL, _klongtimer);
+
+	//timer = ecore_timer_add(10, bitcoin_cb, ad); //create new timer
+	//evas_object_data_set(NULL, _klongtimer, timer);
 	/* Take necessary actions when application becomes visible. */
 }
 
@@ -314,10 +319,10 @@ app_terminate(void *data)
 {
 	dlog_print(DLOG_ERROR, LOG_TAG, "app terminated");
 	/* Release all resources. */
-	appdata_s *ad = data;
-	Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
-	ecore_timer_del(timer);
-	evas_object_data_del(NULL, _klongtimer);
+	//appdata_s *ad = data;
+	//Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+	//ecore_timer_del(timer);
+	//evas_object_data_del(NULL, _klongtimer);
 }
 
 static void

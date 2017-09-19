@@ -12,4 +12,5 @@
         <privilege>http://tizen.org/privilege/alarm.set</privilege>
         <privilege>http://tizen.org/privilege/network.profile</privilege>
     </privileges>
+    <feature name="http://tizen.org/feature/screen.size.normal.360.360">true</feature>
 </manifest>
