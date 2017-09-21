@@ -289,26 +289,26 @@ static void
 app_pause(void *data)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "app pause");
-	appdata_s *ad = data;
-    if (ad->timer)
-        ecore_timer_del(ad->timer);
-    	ad->timer = NULL;
+	//appdata_s *ad = data;
+    //if (ad->timer)
+    //    ecore_timer_del(ad->timer);
+    //	ad->timer = NULL;
 }
 
 static void
 app_resume(void *data)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "app resume");
-	appdata_s *ad = data;
+	//appdata_s *ad = data;
 
-	update_bitcoin(ad,0);
+	//update_bitcoin(ad,0);
 
-	if (ad->timer==NULL) {
-		Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
-		timer = ecore_timer_add(10, bitcoin_cb, ad);
-	    if (timer != NULL)
-	        ad->timer = timer;
-	}
+	//if (ad->timer==NULL) {
+	//	Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+	//	timer = ecore_timer_add(10, bitcoin_cb, ad);
+	//    if (timer != NULL)
+	//        ad->timer = timer;
+	//}
 
 }
 

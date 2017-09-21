@@ -34,3 +34,12 @@
 335	491	0	bitcoinwatch	3f8f5ac2a54bfd01
 2	375	0	src/bitcoinwatch.o	7fadb3f5eb3d16bc
 375	601	0	bitcoinwatch	3f8f5ac2a54bfd01
+2	386	0	src/bitcoinwatch.o	7fadb3f5eb3d16bc
+386	564	0	bitcoinwatch	3f8f5ac2a54bfd01
+2	363	0	src/bitcoinwatch.o	7fadb3f5eb3d16bc
+364	561	0	bitcoinwatch	3f8f5ac2a54bfd01
+1	24	0	clean_cov	b3de405e02eb7ca8
+24	44	0	clean_sa	46ab9549445ac981
+44	61	0	clean	d59b6dac04fa9b5d
+2	384	0	src/bitcoinwatch.o	7fadb3f5eb3d16bc
+384	534	0	bitcoinwatch	3f8f5ac2a54bfd01
