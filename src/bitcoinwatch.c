@@ -51,12 +51,9 @@ update_watch(appdata_s *ad, watch_time_h watch_time, int ambient)
 		snprintf(watch_text, TEXT_BUF_SIZE, "<align=center><color=#e4e4e4><font_size=95>%d:%02d</font_size>",
 				hour, minute);
 
-
-	//}
 	elm_object_text_set(ad->label, concat(watch_text,ampm));
 
-//}
-	//elm_object_text_set(ad->ampm, ampm);
+
 }
 
 
@@ -68,8 +65,7 @@ update_bitcoin(appdata_s *ad, int ambient) //remove if unused
 	gdouble bitcoin;
 
 	bitcoin = get_bitcoin(1); //needs callback to update this, so it's async
-	//bitcoin = get_null(1);
-	//get_bitcoin(ad,1);
+
 	if (bitcoin==131){ // add case for ambient with no color
 		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#e4e4e4>...</color></align>");
 	} else { //8e7044 dark bitcoin
@@ -162,7 +158,7 @@ gdouble get_bitcoin(int duh) {
 		//	if (conn_err != CONNECTION_ERROR_NONE) {
 		//		dlog_print(DLOG_DEBUG, LOG_TAG, "proxy error address %s", conn_err);
 		//	}
-		//}
+		//} connection state handling, not currently needed
 
 						curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
 						dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
@@ -193,7 +189,7 @@ gdouble get_bitcoin(int duh) {
 		root = json_parser_get_root(jsonParser);
 
 		JsonObject *items_obj = json_object_get_object_member(json_node_get_object(root), "USD");
-//		JsonObject *usd_obj = json_object_get_object_member(items_obj,"USD");
+		//JsonObject *usd_obj = json_object_get_object_member(items_obj,"USD");
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Size: %d", json_object_get_size(items_obj));
 		gdouble bitcoin_rate = json_object_get_double_member(items_obj, "last");
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Rate: %g", bitcoin_rate);
@@ -267,24 +263,17 @@ create_base_gui(appdata_s *ad, int width, int height)
 static bool
 app_create(int width, int height, void *data)
 {
-	/* Hook to take necessary actions before main event loop starts
-		Initialize UI resources and application's data
-		If this function returns true, the main loop of application starts
-		If this function returns false, the application is terminated */
 	appdata_s *ad = data;
 
 
 	create_base_gui(ad, width, height);
-	//ecore_timer_add(3, sendRequest, NULL);
+
 	if (ad->timer == NULL) {
 		Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
 		timer = ecore_timer_add(10, bitcoin_cb, ad);
 	    if (timer != NULL)
 	        ad->timer = timer;
 	}
-
-	//evas_object_data_set(NULL, _klongtimer, timer);
-
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, "app create");
 	return true;
@@ -293,7 +282,7 @@ app_create(int width, int height, void *data)
 static void
 app_control(app_control_h app_control, void *data)
 {
-	/* Handle the launch request. */
+
 }
 
 static void
@@ -304,10 +293,6 @@ app_pause(void *data)
     if (ad->timer)
         ecore_timer_del(ad->timer);
     	ad->timer = NULL;
-	//Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
-	//ecore_timer_del(timer);
-	//evas_object_data_del(NULL, _klongtimer);
-	/* Take necessary actions when application becomes invisible. */
 }
 
 static void
@@ -325,15 +310,6 @@ app_resume(void *data)
 	        ad->timer = timer;
 	}
 
-
-	//Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
-
-	//ecore_timer_del(timer); //delete old timer
-	//evas_object_data_del(NULL, _klongtimer);
-
-	//timer = ecore_timer_add(10, bitcoin_cb, ad); //create new timer
-	//evas_object_data_set(NULL, _klongtimer, timer);
-	/* Take necessary actions when application becomes visible. */
 }
 
 static void
@@ -350,7 +326,6 @@ app_terminate(void *data)
 static void
 app_time_tick(watch_time_h watch_time, void *data)
 {
-	/* Called at each second while your app is visible. Update watch UI. */
 	appdata_s *ad = data;
 	update_watch(ad, watch_time, 0);
 }
@@ -358,7 +333,6 @@ app_time_tick(watch_time_h watch_time, void *data)
 static void
 app_ambient_tick(watch_time_h watch_time, void *data)
 {
-	/* Called at each minute while the device is in ambient mode. Update watch UI. */
 	appdata_s *ad = data;
 	update_watch(ad, watch_time, 1);
 }
@@ -367,8 +341,8 @@ static void
 app_ambient_changed(bool ambient_mode, void *data)
 {
 	// destroy old timer
-	//start new timer with ambient mode enabled, for longer delay between ticks
-	/* Update your watch UI to conform to the ambient mode */
+	//start new ambient mode timer
+	/* Update your watch UI for ambient mode */
 }
 
 static void
