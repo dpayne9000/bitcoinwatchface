@@ -250,26 +250,6 @@ create_base_gui(appdata_s *ad, int width, int height)
 	evas_object_move(ad->label2, 0, height / 1.7);
 	evas_object_show(ad->label2);
 
-	/* Background */
-	/*
-	ad->background = evas_object_image_add(ad->conform);
-	evas_object_image_file_set(ad->background, "./res/images/background.png", NULL);
-	err = evas_object_image_load_error_get(ad->background);
-	 if (err != EVAS_LOAD_ERROR_NONE)
-	   {
-	      dlog_print(DLOG_ERROR, LOG_TAG, "could not load image ./res/images/background.png. error string is \"%s\"\n",
-	              evas_load_error_str(err));
-	   }
-
-
-	    /* Set the size and position of the image on the image object area */
-		/*
-	    evas_object_image_fill_set(ad->background, 0, 0, width, height);
-
-	    evas_object_move(ad->background, 0, 0);
-	    evas_object_resize(ad->background, width, height/2);
-	    evas_object_show(ad->background);*/
-
 	ret = watch_time_get_current_time(&watch_time);
 	if (ret != APP_ERROR_NONE)
 		dlog_print(DLOG_ERROR, LOG_TAG, "failed to get current time. err = %d", ret);
@@ -281,7 +261,6 @@ create_base_gui(appdata_s *ad, int width, int height)
 	dlog_print(DLOG_DEBUG, LOG_TAG, "create ui");
 	watch_time_delete(watch_time);
 
-	/* Show window after base gui is set up */
 	evas_object_show(ad->win);
 }
 
@@ -293,12 +272,19 @@ app_create(int width, int height, void *data)
 		If this function returns true, the main loop of application starts
 		If this function returns false, the application is terminated */
 	appdata_s *ad = data;
-	Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+
 
 	create_base_gui(ad, width, height);
 	//ecore_timer_add(3, sendRequest, NULL);
-	timer = ecore_timer_add(10, bitcoin_cb, ad);
-	evas_object_data_set(NULL, _klongtimer, timer);
+	if (ad->timer == NULL) {
+		Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+		timer = ecore_timer_add(10, bitcoin_cb, ad);
+	    if (timer != NULL)
+	        ad->timer = timer;
+	}
+
+	//evas_object_data_set(NULL, _klongtimer, timer);
+
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, "app create");
 	return true;
@@ -314,7 +300,10 @@ static void
 app_pause(void *data)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "app pause");
-	//appdata_s *ad = data;
+	appdata_s *ad = data;
+    if (ad->timer)
+        ecore_timer_del(ad->timer);
+    	ad->timer = NULL;
 	//Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
 	//ecore_timer_del(timer);
 	//evas_object_data_del(NULL, _klongtimer);
@@ -325,7 +314,17 @@ static void
 app_resume(void *data)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "app resume");
-	//appdata_s *ad = data;
+	appdata_s *ad = data;
+
+	update_bitcoin(ad,0);
+
+	if (ad->timer==NULL) {
+		Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
+		timer = ecore_timer_add(10, bitcoin_cb, ad);
+	    if (timer != NULL)
+	        ad->timer = timer;
+	}
+
 
 	//Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
 
@@ -342,10 +341,10 @@ app_terminate(void *data)
 {
 	dlog_print(DLOG_ERROR, LOG_TAG, "app terminated");
 	/* Release all resources. */
-	//appdata_s *ad = data;
-	//Ecore_Timer *timer = evas_object_data_get(ad, _klongtimer);
-	//ecore_timer_del(timer);
-	//evas_object_data_del(NULL, _klongtimer);
+	appdata_s *ad = data;
+    if (ad->timer)
+        ecore_timer_del(ad->timer);
+    	ad->timer = NULL;
 }
 
 static void
