@@ -64,7 +64,7 @@ update_bitcoin(appdata_s *ad, int ambient) //remove if unused
 	char bitcoin_text[TEXT_BUF_SIZE];
 	gdouble bitcoin;
 
-	bitcoin = get_bitcoin(1); //needs callback to update this, so it's async
+	bitcoin = get_bitcoin(1,ad); //needs callback to update this, so it's async
 
 	if (bitcoin==131){ // add case for ambient with no color
 		snprintf(bitcoin_text, TEXT_BUF_SIZE, "<align=center><color=#e4e4e4>...</color></align>");
@@ -104,13 +104,15 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 
 
 static void
-__proxy_changed_cb(const char* ipv4_address, const char* ipv6_address, void* user_data)
+__proxy_changed_cb(const char* ipv4_address, const char* ipv6_address, appdata_s *ad)
 {
-    dlog_print(DLOG_INFO, LOG_TAG, "%s callback, IPv4 address: %s, IPv6 address: %s",
-               (char *)user_data, ipv4_address, (ipv6_address ? ipv6_address : "NULL"));
+	ad->proxy_address = ipv4_address;
+    dlog_print(DLOG_INFO, LOG_TAG, "callback, IPv4 address: %s, IPv6 address: %s",
+               ipv4_address, (ipv6_address ? ipv6_address : "NULL"));
+
 }
 
-gdouble get_bitcoin(int duh) {
+gdouble get_bitcoin(int duh, appdata_s *ad) {
 	JsonParser *jsonParser  =  NULL;
 	GError *error  =  NULL;
 	jsonParser = json_parser_new ();
@@ -136,10 +138,10 @@ gdouble get_bitcoin(int duh) {
 		//connection_wifi_state_e wifi_state;
 		//connection_get_wifi_state(connection, &wifi_state);
 		char *proxy_address;
-		conn_err = connection_get_proxy(connection, CONNECTION_ADDRESS_FAMILY_IPV4, &proxy_address);
+		conn_err = connection_get_proxy(connection, CONNECTION_ADDRESS_FAMILY_IPV4, &ad->proxy_address);
 
 		conn_err = connection_set_proxy_address_changed_cb(connection,
-		                                                   __proxy_changed_cb, NULL);
+		                                                   __proxy_changed_cb, ad);
 
 		if (conn_err != CONNECTION_ERROR_NONE) {
 		    /* Error handling */
@@ -160,8 +162,8 @@ gdouble get_bitcoin(int duh) {
 		//	}
 		//} connection state handling, not currently needed
 
-						curl_easy_setopt(curl, CURLOPT_PROXY, proxy_address);
-						dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", proxy_address);
+						curl_easy_setopt(curl, CURLOPT_PROXY, ad->proxy_address);//
+						dlog_print(DLOG_DEBUG, LOG_TAG, "proxy address %s", ad->proxy_address);
 
 
 

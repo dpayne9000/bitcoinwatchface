@@ -28,7 +28,8 @@ typedef struct appdata {
 	Evas_Object *background;
 	Evas_Object *ampm;
 	Ecore_Timer *timer;
+	char *proxy_address;
 } appdata_s;
 
-gdouble get_bitcoin(int);
+gdouble get_bitcoin(int,appdata_s *);
 Eina_Bool bitcoin_cb(appdata_s *);
